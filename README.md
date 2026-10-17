@@ -2,9 +2,15 @@
 
 Base de un juego **low poly de farmeo y progresión para PC**, preparada para Unity 6.3 LTS. Incluye código de una escena jugable, un generador de entorno editable y herramientas para validar y compilar el proyecto.
 
-**Estado:** código y reglas preparados; 225 comprobaciones del modelo aprobadas. Unity Hub y la CLI oficial están instalados; Unity Editor 6000.3.26f1 está en instalación. La validación visual y de ejecución depende de terminar esa instalación y activar una licencia en Hub.
+**Estado:** prototipo compilado para Windows con Unity 6000.3.26f1. Pasaron las 225 comprobaciones del modelo y la validación real de Play Mode: escena, shader, jugador, cámara, interfaz y serialización JSON. La captura de render fue revisada. El entorno contiene 4.790 triángulos, incluida la vista previa de parcelas de edición. Falta una prueba manual completa de controles y una medición de rendimiento.
 
-## Abrir por primera vez
+## Jugar en este equipo
+
+Abre `Builds/Windows/ValleSemilla.exe`. Conserva los archivos y carpetas que lo acompañan; el ejecutable por sí solo no contiene el juego. Usa WASD para acercarte a las parcelas, E para sembrar o cosechar y R para regar. Alt+F4 cierra la ventana y guarda la partida.
+
+Unity 6000.3.26f1 ya está instalado y la licencia fue reconocida por el editor. Para editar este proyecto ejecuta `Tools/Open-Unity.ps1` y abre `Assets/FarmGame/Scenes/Farm.unity`. Si usas Hub, añade la carpeta `Juego-Farmin-ARK` a Projects.
+
+## Abrir en otro equipo
 
 1. Instala [Unity Hub](https://unity.com/download) y, desde Hub, el **último parche disponible de Unity 6.3 LTS**. La versión de referencia del proyecto es `6000.3.26f1`; puedes abrirlo con un parche posterior de la misma familia. Unity 6.3 LTS tiene soporte hasta diciembre de 2027 según [Unity](https://unity.com/releases/unity-6/support).
 2. En Hub selecciona **Projects → Add → Add project from disk** y elige esta carpeta completa. No necesitas crear otro proyecto ni copiar `Assets` a una plantilla.
@@ -113,7 +119,7 @@ Sustituye la versión por la instalada. El script usa el compilador C# de Visual
 
 Desde el editor: **Valle Semilla → Validar proyecto** y luego **Valle Semilla → Compilar para Windows**. El ejecutable se genera en `Builds/Windows/ValleSemilla.exe`.
 
-Prueba manual pendiente: iniciar Play sin errores; sembrar y regar las seis parcelas; comprobar que solo se cosecha al madurar; alcanzar nivel 2; comprar una parcela y una mejora; guardar, salir y volver; pausar y comprobar que el crecimiento se detiene; probar HUD a 1280×720 y 1920×1080; recorrer los bordes y obstáculos. Confirmar también materiales/sombras en el build y medir rendimiento.
+Prueba manual pendiente: sembrar y regar las seis parcelas; comprobar que solo se cosecha al madurar; alcanzar nivel 2; comprar una parcela y una mejora; guardar, salir y volver; pausar y comprobar que el crecimiento se detiene; probar HUD a 1280×720 y 1920×1080; recorrer los bordes y obstáculos. Confirmar también materiales/sombras en el build y medir rendimiento.
 
 ## Estructura
 

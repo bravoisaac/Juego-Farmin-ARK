@@ -32,7 +32,16 @@ namespace CozyFarm.Editor
             SessionState.SetFloat(StartedKey, (float)EditorApplication.timeSinceStartup);
             SessionState.SetString(ErrorKey, string.Empty);
             Monitor();
-            EditorApplication.EnterPlaymode();
+            // Let startup callbacks (including Unity Search indexing) finish before reloading the domain.
+            double readyAt = EditorApplication.timeSinceStartup + 3;
+            EditorApplication.CallbackFunction beginPlay = null;
+            beginPlay = () =>
+            {
+                if (EditorApplication.timeSinceStartup < readyAt || EditorApplication.isUpdating || EditorApplication.isCompiling) return;
+                EditorApplication.update -= beginPlay;
+                EditorApplication.EnterPlaymode();
+            };
+            EditorApplication.update += beginPlay;
         }
 
         private static void Monitor()
@@ -97,11 +106,18 @@ namespace CozyFarm.Editor
         {
             var target = new RenderTexture(1600, 900, 24, RenderTextureFormat.ARGB32);
             var pixels = new Texture2D(1600, 900, TextureFormat.RGB24, false);
+            Vector3 previousPosition = camera.transform.position;
+            Quaternion previousRotation = camera.transform.rotation;
+            float previousSize = camera.orthographicSize;
+            bool canvasWasEnabled = canvas.enabled;
             RenderTexture previousTarget = camera.targetTexture;
             RenderTexture previousActive = RenderTexture.active;
             RenderMode previousMode = canvas.renderMode;
             Camera previousCamera = canvas.worldCamera;
             float previousDistance = canvas.planeDistance;
+            float previousScale = canvas.scaleFactor;
+            CanvasScaler scaler = canvas.GetComponent<CanvasScaler>();
+            bool scalerWasEnabled = scaler != null && scaler.enabled;
             try
             {
                 target.Create();
@@ -109,6 +125,9 @@ namespace CozyFarm.Editor
                 canvas.renderMode = RenderMode.ScreenSpaceCamera;
                 canvas.worldCamera = camera;
                 canvas.planeDistance = 0.5f;
+                // Render text at the capture resolution instead of the batch-mode Game View scale.
+                if (scaler != null) scaler.enabled = false;
+                canvas.scaleFactor = 1f;
                 Canvas.ForceUpdateCanvases();
                 camera.Render();
                 RenderTexture.active = target;
@@ -117,14 +136,30 @@ namespace CozyFarm.Editor
                 string directory = Path.GetFullPath(Path.Combine(Application.dataPath, "../Temp/Validation"));
                 Directory.CreateDirectory(directory);
                 File.WriteAllBytes(Path.Combine(directory, "FarmPreview.png"), pixels.EncodeToPNG());
+
+                // A second real render shows the complete environment for project documentation.
+                canvas.enabled = false;
+                camera.orthographicSize = 19f;
+                camera.transform.position = new Vector3(22, 30, -30);
+                camera.transform.LookAt(new Vector3(0, 0, 2));
+                camera.Render();
+                RenderTexture.active = target;
+                pixels.ReadPixels(new Rect(0, 0, 1600, 900), 0, 0);
+                pixels.Apply();
+                File.WriteAllBytes(Path.Combine(directory, "FarmEnvironment.png"), pixels.EncodeToPNG());
             }
             finally
             {
+                camera.transform.SetPositionAndRotation(previousPosition, previousRotation);
+                camera.orthographicSize = previousSize;
+                canvas.enabled = canvasWasEnabled;
                 camera.targetTexture = previousTarget;
                 RenderTexture.active = previousActive;
                 canvas.renderMode = previousMode;
                 canvas.worldCamera = previousCamera;
                 canvas.planeDistance = previousDistance;
+                canvas.scaleFactor = previousScale;
+                if (scaler != null) scaler.enabled = scalerWasEnabled;
                 target.Release();
                 UnityEngine.Object.DestroyImmediate(target);
                 UnityEngine.Object.DestroyImmediate(pixels);

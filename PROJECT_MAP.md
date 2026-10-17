@@ -14,8 +14,8 @@
 - Archivos a crear: Assets/FarmGame, Packages/manifest.json, ProjectSettings, README.md y Tools.
 - Archivos que no se deben tocar: archivos personales externos al proyecto; Library/Temp generados por Unity.
 - Riesgo: medio; requiere importar y ejecutar en Unity para validar renderizado y físicas.
-- Verificación realizada: compilación del modelo C# y 225 aserciones en seis escenarios; análisis de sintaxis C# 7.3 de siete archivos.
-- Verificación pendiente: importación real, renderizado/shader, físicas, guardado JSON y build en Unity; no hay editor instalado.
+- Verificación realizada: 225 aserciones en seis escenarios; importación y compilación en Unity 6000.3.26f1; escena, shader, 18 referencias de parcelas y 4.790 triángulos persistidos; Play Mode con jugador, cámara, HUD y serialización JSON; captura revisada; build Windows completado.
+- Verificación pendiente: prueba manual completa de controles, colisiones, progresión, recarga del guardado y medición de FPS/CPU/GPU en el equipo objetivo.
 - Herramientas: `Tools/Open-Unity.ps1`, `Tools/Test-Project.ps1`; menú `Valle Semilla` dentro del editor.
 
 ## Contratos de integración
@@ -37,6 +37,8 @@ Namespace común: `CozyFarm`.
 ## Puesta en marcha (continuación)
 
 - Proyecto localizado tras renombrado en Juego-Farmin-ARK.
-- Unity Hub y CLI oficial instalados; editor 6000.3.26f1 en instalación.
+- Unity Hub, CLI y editor 6000.3.26f1 instalados. Licencia reconocida por el editor.
 - Revisión Unity CLI de 36 archivos: sin errores de integridad ni advertencias.
-- FarmRuntimeValidation añade comprobación real de Play, JSON y captura visual; pendiente de ejecutar al terminar instalación/activación.
+- FarmRuntimeValidation pasa en modo batch y genera Temp/Validation/FarmPreview.png. Espera los callbacks de inicio antes de entrar en Play para evitar interrumpir la indexación de Unity Search.
+- Shader corregido para convertir colores de vértice a espacio lineal cuando corresponde.
+- Ejecutable: Builds/Windows/ValleSemilla.exe. Logs de validación/build/ejecución en Temp/Validation.

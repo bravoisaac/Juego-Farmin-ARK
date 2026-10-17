@@ -54,7 +54,11 @@ Shader "CozyFarm/LowPoly"
                 o.pos = UnityObjectToClipPos(v.vertex);
                 o.worldPos = mul(unity_ObjectToWorld, v.vertex).xyz;
                 o.normal = UnityObjectToWorldNormal(v.normal);
-                o.color = v.color * UNITY_ACCESS_INSTANCED_PROP(Props, _Color);
+                fixed4 vertexColor = v.color;
+                #ifndef UNITY_COLORSPACE_GAMMA
+                    vertexColor.rgb = GammaToLinearSpace(vertexColor.rgb);
+                #endif
+                o.color = vertexColor * UNITY_ACCESS_INSTANCED_PROP(Props, _Color);
                 TRANSFER_SHADOW(o);
                 UNITY_TRANSFER_FOG(o, o.pos);
                 return o;
