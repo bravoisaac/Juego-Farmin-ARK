@@ -1,4 +1,4 @@
-param([string]$UnityPath)
+param([string]$UnityPath, [switch]$Runtime)
 $ErrorActionPreference = 'Stop'
 $projectPath = Split-Path -Parent $PSScriptRoot
 $validationPath = Join-Path $projectPath 'Temp\Validation'
@@ -23,11 +23,15 @@ if ($LASTEXITCODE -ne 0) { throw 'Fallaron las pruebas del modelo.' }
 if ($UnityPath) {
     if (-not (Test-Path -LiteralPath $UnityPath -PathType Leaf)) { throw 'UnityPath no existe.' }
     $logPath = Join-Path $validationPath 'UnityValidation.log'
-    $arguments = @('-batchmode', '-quit', '-projectPath', ('"' + $projectPath + '"'), '-executeMethod', 'CozyFarm.Editor.FarmProjectSetup.ValidateProject', '-logFile', ('"' + $logPath + '"'))
+    $method = if ($Runtime) { 'CozyFarm.Editor.FarmRuntimeValidation.Run' } else { 'CozyFarm.Editor.FarmProjectSetup.ValidateProject' }
+    $arguments = @('-batchmode', '-projectPath', ('"' + $projectPath + '"'), '-executeMethod', $method, '-logFile', ('"' + $logPath + '"'))
+    if (-not $Runtime) { $arguments += '-quit' }
     $process = Start-Process -FilePath $UnityPath -ArgumentList $arguments -PassThru -Wait -WindowStyle Hidden
     if ($process.ExitCode -ne 0) { throw "Unity falló. Revisa $logPath" }
-    if (-not (Select-String -LiteralPath $logPath -Pattern 'VALIDATION PASSED' -Quiet)) { throw "Unity no confirmó validación. Revisa $logPath" }
-    Write-Host 'Escena y shader validados en Unity.'
+    $expectedMarker = if ($Runtime) { 'RUNTIME VALIDATION PASSED' } else { 'VALIDATION PASSED' }
+    if (-not (Select-String -LiteralPath $logPath -Pattern $expectedMarker -Quiet)) { throw "Unity no confirmó validación. Revisa $logPath" }
+    Write-Host 'Validación de Unity completada.'
+    if ($Runtime) { Write-Host ('Captura: ' + (Join-Path $validationPath 'FarmPreview.png')) }
 } else {
     Write-Host 'Modelo validado. Unity no se ejecutó; usa -UnityPath para validar escena y shader.'
 }

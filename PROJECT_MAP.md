@@ -33,3 +33,10 @@ Namespace común: `CozyFarm`.
 ## Flujo final
 
 `FarmProjectSetup` crea/persiste el entorno y configura `FarmBootstrap`. Al jugar, el bootstrap carga `FarmSaveStore`, crea jugador/HUD y gestiona un pool de visuales por cultivo. Las acciones de teclado o botones pasan por `FarmRules`; el reloj actualiza crecimiento y aspecto. El guardado conserva una copia de respaldo. El código de edición no se incluye en el ejecutable.
+
+## Puesta en marcha (continuación)
+
+- Proyecto localizado tras renombrado en Juego-Farmin-ARK.
+- Unity Hub y CLI oficial instalados; editor 6000.3.26f1 en instalación.
+- Revisión Unity CLI de 36 archivos: sin errores de integridad ni advertencias.
+- FarmRuntimeValidation añade comprobación real de Play, JSON y captura visual; pendiente de ejecutar al terminar instalación/activación.

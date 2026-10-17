@@ -2,11 +2,11 @@
 
 Base de un juego **low poly de farmeo y progresión para PC**, preparada para Unity 6.3 LTS. Incluye código de una escena jugable, un generador de entorno editable y herramientas para validar y compilar el proyecto.
 
-**Estado:** código y reglas preparados; las pruebas del modelo pasan. Unity Editor no está instalado en este equipo, por lo que todavía no se ha importado ni ejecutado la escena. El aspecto visual, las físicas, el shader y los FPS deben comprobarse en el editor.
+**Estado:** código y reglas preparados; 225 comprobaciones del modelo aprobadas. Unity Hub y la CLI oficial están instalados; Unity Editor 6000.3.26f1 está en instalación. La validación visual y de ejecución depende de terminar esa instalación y activar una licencia en Hub.
 
 ## Abrir por primera vez
 
-1. Instala [Unity Hub](https://unity.com/download) y, desde Hub, el **último parche disponible de Unity 6.3 LTS**. La versión de referencia del proyecto es `6000.3.0f1`; puedes abrirlo con un parche posterior de la misma familia. Unity 6.3 LTS tiene soporte hasta diciembre de 2027 según [Unity](https://unity.com/releases/unity-6/support).
+1. Instala [Unity Hub](https://unity.com/download) y, desde Hub, el **último parche disponible de Unity 6.3 LTS**. La versión de referencia del proyecto es `6000.3.26f1`; puedes abrirlo con un parche posterior de la misma familia. Unity 6.3 LTS tiene soporte hasta diciembre de 2027 según [Unity](https://unity.com/releases/unity-6/support).
 2. En Hub selecciona **Projects → Add → Add project from disk** y elige esta carpeta completa. No necesitas crear otro proyecto ni copiar `Assets` a una plantilla.
 3. Espera a que termine la importación y descarga de uGUI. Se genera y abre `Assets/FarmGame/Scenes/Farm.unity` automáticamente. Si no aparece, usa **Valle Semilla → Preparar escena inicial**.
 4. Pulsa **Play**. Camina hacia las parcelas, elige una semilla y pulsa **E**.
@@ -106,7 +106,7 @@ Modelo sin Unity, desde PowerShell:
 Validación adicional con un editor instalado, cerrado y con licencia activada:
 
 ```powershell
-.\Tools\Test-Project.ps1 -UnityPath "C:\Program Files\Unity\Hub\Editor\6000.3.0f1\Editor\Unity.exe"
+.\Tools\Test-Project.ps1 -UnityPath "C:\Program Files\Unity\Hub\Editor\6000.3.26f1\Editor\Unity.exe"
 ```
 
 Sustituye la versión por la instalada. El script usa el compilador C# de Visual Studio, ejecuta las pruebas y, si indicas el editor, comprueba escena, shader y referencias persistidas. El log de Unity queda en `Temp/Validation/UnityValidation.log`.
@@ -135,3 +135,13 @@ PROJECT_MAP.md                    Mapa de dependencias
 ```
 
 Es un prototipo inicial para ampliar. Inventario independiente, construcción libre, animales, audio, controles de mando y multijugador quedan fuera de esta primera base.
+
+## Prueba automática de inicio y captura
+
+Con el editor cerrado y una licencia activa:
+
+```powershell
+.\Tools\Test-Project.ps1 -UnityPath "C:\Program Files\Unity\Hub\Editor\6000.3.26f1\Editor\Unity.exe" -Runtime
+```
+
+Arranca Play Mode, comprueba que se crearon jugador, cámara y botones, verifica la serialización JSON y guarda `Temp/Validation/FarmPreview.png`. Para incluir el HUD en esa captura se usa temporalmente un canvas de cámara; el juego normal conserva su canvas overlay. Esta comprobación no reemplaza una prueba de controles ni una medición de FPS. También puedes ejecutarla desde **Valle Semilla → Validar inicio de partida**.
