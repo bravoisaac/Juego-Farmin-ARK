@@ -42,3 +42,10 @@ Namespace común: `CozyFarm`.
 - FarmRuntimeValidation pasa en modo batch y genera Temp/Validation/FarmPreview.png. Espera los callbacks de inicio antes de entrar en Play para evitar interrumpir la indexación de Unity Search.
 - Shader corregido para convertir colores de vértice a espacio lineal cuando corresponde.
 - Ejecutable: Builds/Windows/ValleSemilla.exe. Logs de validación/build/ejecución en Temp/Validation.
+
+## Documentación visual
+
+- README.md: presentación del juego, mecánicas, progresión, controles y dos renders reales.
+- docs/DESARROLLO.md: guía técnica de instalación, edición, guardado y validación.
+- docs/images/: capturas persistentes de la partida y del escenario sin HUD.
+- FarmRuntimeValidation genera FarmPreview.png y FarmEnvironment.png en Temp/Validation; copia las capturas a docs/images al actualizar la documentación.
